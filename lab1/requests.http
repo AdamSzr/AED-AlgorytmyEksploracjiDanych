@@ -7,3 +7,5 @@ GET https://api.github.com/users/MikiKru
 GET https://api.github.com/users/MikiKru/repos
 
 
+###
+GET https://api.open-meteo.com/v1/forecast?latitude=53.1235&longitude=18.0076&current=temperature_2m&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FBerlin&forecast_days=2
