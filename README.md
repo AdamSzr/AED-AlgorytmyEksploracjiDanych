@@ -1,2 +1,1 @@
-# AED-AlgorytmyEksploracjiDanych
-Przedmiot na studiach
+# AED - Algorytmy i eksploracja danych
