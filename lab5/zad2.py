@@ -18,14 +18,14 @@ y_test = np.loadtxt('Test/y_test.txt')
 # Przykładowe klasyfikatory (możesz wybrać inne)
 classifier1 = DecisionTreeClassifier()
 classifier2 = RandomForestClassifier()
-classifier3 = SVC()
+classifier3 = SVC(probability=True)
 
 # Tworzenie klasyfikatora zespołowego
 ensemble_classifier = VotingClassifier(estimators=[
     ('decision_tree', classifier1),
     ('random_forest', classifier2),
     ('svm', classifier3)
-], voting='hard')  # Ustawienie 'hard' oznacza zasadę większości głosów
+], voting='soft')  # Ustawienie 'hard' oznacza zasadę większości głosów
 
 
 # Kroswalidacja
@@ -41,16 +41,16 @@ predictions = ensemble_classifier.predict(X_test)
 accuracy = accuracy_score(y_test, predictions)
 
 # Oblicz Recall
-recall = recall_score(y_test, predictions)
+recall = recall_score(y_test, predictions, average='macro')
 
 # Oblicz F1-score
-f1 = f1_score(y_test, predictions)
+f1 = f1_score(y_test, predictions, average='macro')
 
 # Oblicz AUC
 # Dla obliczenia AUC musisz uzyskać prawdopodobieństwa przynależności do klasy pozytywnej zamiast przewidywanych etykiet
 probs = ensemble_classifier.predict_proba(
     X_test)[:, 1]  # Prawdopodobieństwo klasy pozytywnej
-auc = roc_auc_score(y_test, probs)
+auc = roc_auc_score(y_test, probs, multi_class='ovr')
 
 print(f'Accuracy using ensemble classifier on test set: {accuracy}')
 print(f'Recall: {recall}')
@@ -58,6 +58,8 @@ print(f'F1 Score: {f1}')
 print(f'AUC: {auc}')
 print(f'Cross-validation scores: {cv_scores}')
 print(f'Mean cross-validation score: {cv_scores.mean()}')
+
+# ---------------------------------------------------
 
 # Tworzenie DataFrame z wynikami
 results = pd.DataFrame({
