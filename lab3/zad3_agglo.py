@@ -106,3 +106,25 @@ plt.xlabel('Range')
 plt.ylabel('Cluster')
 plt.title('Heatmap')
 plt.show()
+
+
+result = []
+
+for key, value in results.items():
+    counts = [item['count'] for item in value]
+    result.append(counts)
+
+# Przygotowanie danych do hierarchicznego klastrowania
+X = np.array(result)
+
+# Tworzenie dendrogramu
+linked = linkage(X, 'ward')
+
+# Rysowanie dendrogramu
+plt.figure(figsize=(10, 6))
+dendrogram(linked, orientation='top', labels=list(results.keys()),
+           distance_sort='descending', show_leaf_counts=True)
+plt.title('Dendrogram')
+plt.xlabel('Klaster')
+plt.ylabel('Odległość')
+plt.show()
