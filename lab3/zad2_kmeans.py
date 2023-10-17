@@ -24,13 +24,13 @@ features = data[values].copy()
 inertia_values = []
 
 # Przeprowadź analizę K-means dla różnych liczb klastrów
-for n_clusters in range(1, 11):
+for n_clusters in range(1, 8):
     kmeans = KMeans(n_clusters=n_clusters, n_init=10)
     kmeans.fit(features)
     inertia_values.append(kmeans.inertia_)
 
 # Wykres metody "łokcia"
-plt.plot(range(1, 11), inertia_values, marker='o')
+plt.plot(range(1, 8), inertia_values, marker='o')
 plt.xlabel('Liczba klastrów')
 plt.ylabel('Wartość inercji')
 plt.title('Metoda Łokciowa')
@@ -49,8 +49,8 @@ features['Cluster'] = kmeans.labels_
 print(features)
 
 # Wykres
-plt.scatter(features['W0'], features['W1'],
-            c=features['Cluster'], cmap='viridis')
+plt.scatter(features['W2'], features['W3'],
+            c=features['Cluster'])
 plt.xlabel('W0')
 plt.ylabel('W1')
 plt.title('Analiza K-means')

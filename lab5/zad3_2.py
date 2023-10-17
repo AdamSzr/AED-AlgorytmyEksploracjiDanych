@@ -6,19 +6,24 @@ from scipy.stats import mode
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_score
 import pandas as pd
+import os
 
+base_path = os.getcwd()
 
 # Wczytaj dane treningowe i testowe
-X_train = np.loadtxt('/home/adam-laptop/Documents/szkola/MGR/AED-AlgorytmyEksploracjiDanych/lab5/X_train.txt')
-y_train = np.loadtxt('/home/adam-laptop/Documents/szkola/MGR/AED-AlgorytmyEksploracjiDanych/lab5/y_train.txt')
-X_test = np.loadtxt('/home/adam-laptop/Documents/szkola/MGR/AED-AlgorytmyEksploracjiDanych/lab5/X_test.txt')
-y_test = np.loadtxt('/home/adam-laptop/Documents/szkola/MGR/AED-AlgorytmyEksploracjiDanych/lab5/y_test.txt')
+X_train = np.loadtxt(base_path+'/lab5/X_train.txt')
+y_train = np.loadtxt(
+    base_path+'/lab5/y_train.txt')
+X_test = np.loadtxt(
+    base_path+'/lab5/X_test.txt')
+y_test = np.loadtxt(
+    base_path+'/lab5/y_test.txt')
 
 # Konfiguracja zespołu
 classifiers = [
-    RandomForestClassifier(n_estimators=10),
+    # RandomForestClassifier(n_estimators=10),
     # GradientBoostingClassifier(n_estimators=1),
-    SVC(kernel='linear', C=1.0, cache_size=1536 )
+    SVC(kernel='linear', C=1.0, cache_size=1536)
 ]
 
 # Trenowanie każdego klasyfikatora na pełnym zbiorze treningowym
@@ -50,7 +55,8 @@ print("Dokładność na danych testowych (z zasadą większości głosów):", ac
 # Kroswalidacja na danych treningowych
 cv_scores = []
 for classifier in classifiers:
-    cv_score = cross_val_score(classifier, X_train, y_train, cv=5, scoring='accuracy')
+    cv_score = cross_val_score(
+        classifier, X_train, y_train, cv=5, scoring='accuracy')
     cv_scores.append(cv_score)
 
 # Trenowanie każdego klasyfikatora na pełnym zbiorze treningowym
@@ -85,8 +91,9 @@ for i, classifier in enumerate(classifiers):
     recall = recall_score(y_test, predictions[i], average='macro')
     f1 = f1_score(y_test, predictions[i], average='macro')
     auc = roc_auc_score(y_test, predictions[i], multi_class='ovr')
-    
-    results.append({'Classifier': f'Classifier {i + 1}', 'ACC': acc, 'Recall': recall, 'F1': f1})
+
+    results.append({'Classifier': f'Classifier {i + 1}',
+                   'ACC': acc, 'Recall': recall, 'F1': f1})
 
 # Tworzenie ramki danych z wynikami
 results_df = pd.DataFrame(results)
