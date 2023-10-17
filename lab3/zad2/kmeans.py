@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
-from cluster_evaluation import cluster_evaluation
+from lab3.cluster_evaluation import cluster_evaluation
 import numpy as np
 
 data = pd.read_csv(
