@@ -22,26 +22,28 @@ for i in range(52):
 
 features = data[values].copy()  # Stwórz kopię danych
 
+
+########################################################################
+
+
 # Wybierz parametry AgglomerativeClustering
 n_clusters = 3  # Określ liczbę klastrów, np. 3
-linkage_type = 'ward'  # Typ wiązania: 'ward', 'complete', 'average', itp.
-# Metryka odległości: 'euclidean', 'manhattan', itp.
-distance_metric = 'euclidean'
 
 # Przeprowadź analizę AgglomerativeClustering
 agg_clustering = AgglomerativeClustering(
-    n_clusters=n_clusters, linkage=linkage_type, affinity=distance_metric)
+    n_clusters=n_clusters, linkage='ward', affinity='euclidean')
 agg_clustering.fit(features)
 
 # Dodaj wyniki klastry do kopii DataFrame
 features['Cluster'] = agg_clustering.labels_
 
+
+########################################################################
+
+
 # Zakresy przedziałów wartości
 n_bins = 10
 value_ranges = np.linspace(0, data.max().max(), n_bins + 1)
-
-# Inicjalizacja pustej tablicy wynikowej
-heatmap_data = []
 
 # Inicjalizacja słownika do zliczania klastrów
 cluster_counts = {cluster: [] for cluster in range(n_clusters)}
@@ -57,6 +59,9 @@ cluster_counts_df = pd.DataFrame(cluster_counts)
 
 # Wykreśl wykres słupkowy ilości wystąpień klastrów
 cluster_counts_df.sum().plot(kind='bar')
+
+
+########################################################################
 
 
 # Inicjalizacja słownika do przechowywania wyników
@@ -75,28 +80,18 @@ for i in range(n_ranges):
         counts = (features.iloc[start:end]['Cluster'] == cluster).sum()
         results[cluster].append({'range': f'{start}-{end}', 'count': counts})
 
-print(results)
-
 # Konwersja danych na ramkę danych
 df = pd.DataFrame(results).T
-
 
 # Tworzenie tablicy z wartościami zakresów "range"
 range_values = [item['range'] for item in results[0]]
 
-# Wyświetlenie tablicy z wartościami 'range'
-print(range_values)
-
 # Tworzenie tablicy z wartościami pola "count"
-
 v = []
 
 for key, value in results.items():
     counts = [item['count'] for item in value]
     v.append(counts)
-
-print(v)
-
 
 # Tworzenie heatmapy
 plt.figure(figsize=(10, 6))
@@ -106,6 +101,9 @@ plt.xlabel('Range')
 plt.ylabel('Cluster')
 plt.title('Heatmap')
 plt.show()
+
+
+########################################################################
 
 
 result = []
