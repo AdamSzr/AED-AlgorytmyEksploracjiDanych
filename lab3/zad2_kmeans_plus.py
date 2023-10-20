@@ -2,10 +2,9 @@ import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
-print('\r\n### Zad2 ###\r\n')
-print('________________________\r\n')
-# Wczytaj dane (załóżmy, że masz plik CSV z danymi)
-data = pd.read_csv('Sales_Transactions_Dataset_Weekly.csv')
+# Wczytaj dane z pliku CSV do DataFrame
+data = pd.read_csv(
+    '/home/adam-pc/Documents/mgr/AED-AlgorytmyEksploracjiDanych/lab3/Sales_Transactions_Dataset_Weekly.csv')
 
 # Przetwórz dane, usuń brakujące wartości
 data = data.dropna()
@@ -53,7 +52,7 @@ plt.scatter(features['W2'], features['W3'],
             c=features['Cluster'], cmap='viridis')
 plt.xlabel('W2')
 plt.ylabel('W3')
-plt.title('Analiza K-means')
+plt.title('Analiza K-means ++')
 
 # Dodaj centra klastrów na wykres
 centroids = kmeans.cluster_centers_

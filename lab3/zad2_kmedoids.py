@@ -3,7 +3,8 @@ from sklearn_extra.cluster import KMedoids
 import matplotlib.pyplot as plt
 
 # Wczytaj dane z pliku CSV do DataFrame
-data = pd.read_csv('Sales_Transactions_Dataset_Weekly.csv')
+data = pd.read_csv(
+    '/home/adam-pc/Documents/mgr/AED-AlgorytmyEksploracjiDanych/lab3/Sales_Transactions_Dataset_Weekly.csv')
 
 # Przetwórz dane, usuń brakujące wartości
 data = data.dropna()
@@ -34,7 +35,7 @@ plt.scatter(features['W0'], features['W1'],
             c=features['Cluster'], cmap='viridis')
 plt.xlabel('W0')
 plt.ylabel('W1')
-plt.title('Klastrowanie danych (K-Medoids)')
+plt.title('Klastrowanie danych (*K-Medoids)')
 
 # Dodaj centra klastrów (medoidy) na wykres
 medoids = features.iloc[kmedoids.medoid_indices_]
