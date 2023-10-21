@@ -4,13 +4,13 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_score
 from sklearn.model_selection import cross_val_predict
 import os
-
+import pandas as pd
 
 # Wczytaj dane treningowe i testowe
-X_train = np.loadtxt(os.getcwd()+'/lab5/X_train.txt')
-y_train = np.loadtxt(os.getcwd()+'/lab5/y_train.txt')
-X_test = np.loadtxt(os.getcwd()+'/lab5/X_test.txt')
-y_test = np.loadtxt(os.getcwd()+'/lab5/y_test.txt')
+X_train = np.loadtxt(os.getcwd()+'/X_train.txt')
+y_train = np.loadtxt(os.getcwd()+'/y_train.txt')
+X_test = np.loadtxt(os.getcwd()+'/X_test.txt')
+y_test = np.loadtxt(os.getcwd()+'/y_test.txt')
 
 # Stwórz klasyfikatory
 bagging_classifier = BaggingClassifier(
@@ -119,3 +119,16 @@ print("F1 Score modelu zespołowego na zbiorze testowym: {:.2f}".format(
 # print("AUC modelu zespołowego na zbiorze testowym: {:.2f}".format(
 #     ensemble_auc_test))
 # ---------------------------------------------------------------------------------------
+
+
+# Tworzenie DataFrame
+data = {
+    'Metryka': ['Accuracy', 'Recall', 'F1 Score', 'AUC'],
+    'Kroswalidacja': [ensemble_accuracy_cv, ensemble_recall_cv, ensemble_f1_score_cv, 'error'],
+    'Testowanie': [ensemble_accuracy_test, ensemble_recall_test, ensemble_f1_score_test, 'error']
+}
+
+df = pd.DataFrame(data)
+
+# Zapis do pliku CSV (CSV)
+df.to_csv('ensemble_learning.csv', index=False)
