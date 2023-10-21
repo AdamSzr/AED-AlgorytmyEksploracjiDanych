@@ -11,10 +11,10 @@ import pandas as pd
 
 
 # Wczytaj dane treningowe i testowe
-X_train = np.loadtxt('Train/X_train.txt')
-y_train = np.loadtxt('Train/y_train.txt')
-X_test = np.loadtxt('Test/X_test.txt')
-y_test = np.loadtxt('Test/y_test.txt')
+X_train = np.loadtxt('X_train.txt')
+y_train = np.loadtxt('y_train.txt')
+X_test = np.loadtxt('X_test.txt')
+y_test = np.loadtxt('y_test.txt')
 
 # Podziel dane na zestaw treningowy i zestaw testowy
 X_train, X_test, y_train, y_test = train_test_split(
