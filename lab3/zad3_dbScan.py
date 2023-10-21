@@ -35,12 +35,12 @@ X_scaled = scaler.fit_transform(features)
 
 
 # Wybierz parametry DBSCAN
-eps = 0.2  # Promień sąsiedztwa
+eps = 0.05  # Promień sąsiedztwa
 min_samples = 5  # Minimalna liczba próbek w sąsiedztwie
 
 # Przeprowadź analizę klastrowania DBSCAN
 dbscan = DBSCAN(eps=eps, min_samples=min_samples)
-dbscan.fit(X_scaled)
+dbscan.fit(data)
 
 # Przygotuj etykiety klastrów w formie kategorii całkowitych
 unique_labels = set(dbscan.labels_)

@@ -10,10 +10,10 @@ import pandas as pd
 
 
 # Wczytaj dane treningowe i testowe
-X_train = np.loadtxt('Train/X_train.txt')
-y_train = np.loadtxt('Train/y_train.txt')
-X_test = np.loadtxt('Test/X_test.txt')
-y_test = np.loadtxt('Test/y_test.txt')
+X_train = np.loadtxt('X_train.txt')
+y_train = np.loadtxt('y_train.txt')
+X_test = np.loadtxt('X_test.txt')
+y_test = np.loadtxt('y_test.txt')
 
 # Przykładowe klasyfikatory (możesz wybrać inne)
 classifier1 = DecisionTreeClassifier()
@@ -22,9 +22,9 @@ classifier3 = SVC(probability=True)
 
 # Tworzenie klasyfikatora zespołowego
 ensemble_classifier = VotingClassifier(estimators=[
-    ('decision_tree', classifier1),
+    # ('decision_tree', classifier1),
     ('random_forest', classifier2),
-    ('svm', classifier3)
+    # ('svm', classifier3)
 ], voting='soft')  # Ustawienie 'hard' oznacza zasadę większości głosów
 
 
