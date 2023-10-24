@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.ensemble import BaggingClassifier, RandomForestClassifier
+from sklearn.ensemble import BaggingClassifier, GradientBoostingClassifier, RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_score
 from sklearn.model_selection import cross_val_predict
@@ -16,17 +16,17 @@ y_test = np.loadtxt(os.getcwd()+'/y_test.txt')
 bagging_classifier = BaggingClassifier(
     estimator=GaussianNB(), n_estimators=3)
 random_forest_classifier = RandomForestClassifier(n_estimators=3)
-bayes_optimal_classifier = GaussianNB()
+gb_classifier = GradientBoostingClassifier(max_depth=1, n_estimators=5)
 
 # Trenuj każdy klasyfikator na całym zbiorze treningowym
 bagging_classifier.fit(X_train, y_train)
 random_forest_classifier.fit(X_train, y_train)
-bayes_optimal_classifier.fit(X_train, y_train)
+gb_classifier.fit(X_train, y_train)
 
 # Przeprowadź prognozowanie na zbiorze testowym
 y_pred_bagging = bagging_classifier.predict(X_test)
 y_pred_random_forest = random_forest_classifier.predict(X_test)
-y_pred_bayes_optimal = bayes_optimal_classifier.predict(X_test)
+y_pred_bayes_optimal = gb_classifier.predict(X_test)
 
 # --------------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ y_pred_bagging_cv = cross_val_predict(
 y_pred_random_forest_cv = cross_val_predict(
     random_forest_classifier, X_train, y_train, cv=5)
 y_pred_bayes_optimal_cv = cross_val_predict(
-    bayes_optimal_classifier, X_train, y_train, cv=5)
+    gb_classifier, X_train, y_train, cv=5)
 
 # Oblicz wypadkową ocenę stosując zasadę większości głosów na podstawie wyników kroswalidacji
 ensemble_result_cv = (y_pred_bagging_cv + y_pred_random_forest_cv +
@@ -76,6 +76,9 @@ print("Czułość modelu zespołowego w kroswalidacji (Recall): {:.2f}".format(
     ensemble_recall_cv))
 print("F1 Score modelu zespołowego w kroswalidacji: {:.2f}".format(
     ensemble_f1_score_cv))
+
+
+
 # print("AUC modelu zespołowego w kroswalidacji: {:.2f}".format(ensemble_auc_cv))
 
 
@@ -84,7 +87,7 @@ print("F1 Score modelu zespołowego w kroswalidacji: {:.2f}".format(
 # Przeprowadź prognozowanie na zbiorze testowym
 y_pred_bagging_test = bagging_classifier.predict(X_test)
 y_pred_random_forest_test = random_forest_classifier.predict(X_test)
-y_pred_bayes_optimal_test = bayes_optimal_classifier.predict(X_test)
+y_pred_bayes_optimal_test = gb_classifier.predict(X_test)
 
 # Oblicz wypadkową ocenę stosując zasadę większości głosów na podstawie wyników na zbiorze testowym
 ensemble_result_test = (y_pred_bagging_test + y_pred_random_forest_test +
@@ -131,4 +134,4 @@ data = {
 df = pd.DataFrame(data)
 
 # Zapis do pliku CSV (CSV)
-df.to_csv('ensemble_learning.csv', index=False)
+df.to_excel('ensemble_learning.xls', index=False)

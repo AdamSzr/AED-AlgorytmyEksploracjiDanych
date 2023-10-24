@@ -11,18 +11,18 @@ import os
 base_path = os.getcwd()
 
 # Wczytaj dane treningowe i testowe
-X_train = np.loadtxt(base_path+'/lab5/X_train.txt')
+X_train = np.loadtxt(base_path+'/X_train.txt')
 y_train = np.loadtxt(
-    base_path+'/lab5/y_train.txt')
+    base_path+'/y_train.txt')
 X_test = np.loadtxt(
-    base_path+'/lab5/X_test.txt')
+    base_path+'/X_test.txt')
 y_test = np.loadtxt(
-    base_path+'/lab5/y_test.txt')
+    base_path+'/y_test.txt')
 
 # Konfiguracja zespołu
 classifiers = [
     # RandomForestClassifier(n_estimators=10),
-    # GradientBoostingClassifier(n_estimators=1),
+    GradientBoostingClassifier(n_estimators=1),
     SVC(kernel='linear', C=1.0, cache_size=1536)
 ]
 
@@ -90,7 +90,7 @@ for i, classifier in enumerate(classifiers):
     acc = accuracy_score(y_test, predictions[i])
     recall = recall_score(y_test, predictions[i], average='macro')
     f1 = f1_score(y_test, predictions[i], average='macro')
-    auc = roc_auc_score(y_test, predictions[i], multi_class='ovr')
+    auc = 0 #roc_auc_score(y_test[:100], predictions[i][:100], multi_class='ovr', average='macro')
 
     results.append({'Classifier': f'Classifier {i + 1}',
                    'ACC': acc, 'Recall': recall, 'F1': f1})
