@@ -26,9 +26,11 @@ y_pred_random_forest_cv = cross_val_predict(
     random_forest_classifier, X_train, y_train, cv=5)
 
 # # Oblicz AUC (Area Under the ROC Curve) w kroswalidacji
-ensemble_auc_cv = roc_auc_score(
-    y_train, y_pred_random_forest_cv, multi_class='ovr')
+# ensemble_auc_cv = roc_auc_score(
+#     y_train, y_pred_random_forest_cv, multi_class='ovr')
+
+ensemble_auc_cv = roc_auc_score(y_train, random_forest_classifier.predict_proba(X_train), multi_class='ovr'),
 
 
-print("AUC modelu zespołowego w kroswalidacji: {:.2f}".format(ensemble_auc_cv))
+print("AUC modelu zespołowego w kroswalidacji: " + str(ensemble_auc_cv))
 
