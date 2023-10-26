@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.ensemble import BaggingClassifier, GradientBoostingClassifier, RandomForestClassifier
+from sklearn.ensemble import BaggingClassifier, GradientBoostingClassifier, RandomForestClassifier, VotingClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_score
 from sklearn.model_selection import cross_val_predict
@@ -14,8 +14,8 @@ y_test = np.loadtxt(os.getcwd()+'/y_test.txt')
 
 # Stwórz klasyfikatory
 bagging_classifier = BaggingClassifier(
-    estimator=GaussianNB(), n_estimators=3)
-random_forest_classifier = RandomForestClassifier(n_estimators=3)
+    estimator=GaussianNB(), n_estimators=10)
+random_forest_classifier = RandomForestClassifier(n_estimators=10)
 gb_classifier = GradientBoostingClassifier(max_depth=1, n_estimators=5)
 
 # Trenuj każdy klasyfikator na całym zbiorze treningowym
@@ -37,7 +37,6 @@ y_ensemble = (y_pred_bagging + y_pred_random_forest +
 # Oblicz dokładność
 ensemble_accuracy = accuracy_score(y_test, y_ensemble)
 print("Dokładność modelu zespołowego: {:.2f}".format(ensemble_accuracy))
-
 
 # --------------------------------------------------------------------------------------
 
@@ -67,8 +66,8 @@ ensemble_f1_score_cv = f1_score(
     y_train, ensemble_result_cv, average='weighted')
 
 # # Oblicz AUC (Area Under the ROC Curve) w kroswalidacji
-# ensemble_auc_cv = roc_auc_score(
-#     y_train, ensemble_result_cv)
+ensemble_auc_cv = roc_auc_score(
+    y_train, bagging_classifier.predict_proba(X_train), multi_class='ovr')
 
 print("Dokładność modelu zespołowego w kroswalidacji (ACC): {:.2f}".format(
     ensemble_accuracy_cv))
@@ -76,10 +75,9 @@ print("Czułość modelu zespołowego w kroswalidacji (Recall): {:.2f}".format(
     ensemble_recall_cv))
 print("F1 Score modelu zespołowego w kroswalidacji: {:.2f}".format(
     ensemble_f1_score_cv))
+print("AUC Score modelu zespołowego w kroswalidacji: {:.2f}".format(
+    ensemble_f1_score_cv))
 
-
-
-# print("AUC modelu zespołowego w kroswalidacji: {:.2f}".format(ensemble_auc_cv))
 
 
 ##########################
@@ -107,9 +105,18 @@ ensemble_recall_test = recall_score(
 ensemble_f1_score_test = f1_score(
     y_test, ensemble_result_test, average='weighted')
 
+
+votingClass = VotingClassifier(estimators=[
+    ('bagging', bagging_classifier),
+    ('random_forest', random_forest_classifier),
+    ('gb', gb_classifier)
+], voting='soft')  # Ustawienie 'hard' oznacza zasadę większości głosów
+
+votingClass.fit(X_train,y_train)
+
 # # Oblicz AUC (Area Under the ROC Curve) na zbiorze testowym
-# ensemble_auc_test = roc_auc_score(
-#     y_test, ensemble_result_test)
+ensemble_auc_test = roc_auc_score(
+    y_test, votingClass.predict_proba(X_test), multi_class='ovr')
 
 ##########################
 
@@ -119,16 +126,15 @@ print("Czułość modelu zespołowego na zbiorze testowym (Recall): {:.2f}".form
     ensemble_recall_test))
 print("F1 Score modelu zespołowego na zbiorze testowym: {:.2f}".format(
     ensemble_f1_score_test))
-# print("AUC modelu zespołowego na zbiorze testowym: {:.2f}".format(
-#     ensemble_auc_test))
+print("AUC modelu zespołowego na zbiorze testowym: " + str(ensemble_auc_test))
 # ---------------------------------------------------------------------------------------
 
 
 # Tworzenie DataFrame
 data = {
     'Metryka': ['Accuracy', 'Recall', 'F1 Score', 'AUC'],
-    'Kroswalidacja': [ensemble_accuracy_cv, ensemble_recall_cv, ensemble_f1_score_cv, 'error'],
-    'Testowanie': [ensemble_accuracy_test, ensemble_recall_test, ensemble_f1_score_test, 'error']
+    'Kroswalidacja': [ensemble_accuracy_cv, ensemble_recall_cv, ensemble_f1_score_cv, ensemble_auc_cv],
+    'Testowanie': [ensemble_accuracy_test, ensemble_recall_test, ensemble_f1_score_test, ensemble_auc_test]
 }
 
 df = pd.DataFrame(data)

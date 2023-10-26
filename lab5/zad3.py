@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 import os
 from sklearn.model_selection import cross_val_score
-from sklearn.metrics import accuracy_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_score
 import pandas as pd
 
 base_path = os.getcwd()
@@ -27,7 +27,7 @@ ensemble_clf = VotingClassifier(estimators=[
     ('AdaBoost', ada_clf),
     ('Gradient Boosting', gb_clf),
     ('Bagging', bagging_clf)
-], voting='hard')  # 'hard' oznacza głosowanie większościowe
+], voting='soft')  # 'hard' oznacza głosowanie większościowe
 
 # Trenowanie modelu ensemble
 ensemble_clf.fit(X_train, y_train)
@@ -47,14 +47,18 @@ print("Recall (Czułość):", recall)
 f1 = f1_score(y_test, y_pred, average='weighted')
 print("F1:", f1)
 
+# Obliczanie AUC
+auc = roc_auc_score(y_test, ensemble_clf.predict_proba(X_test), average='weighted', multi_class='ovr')
+print("AUC:", recall)
+
 # Wynik kroswalidacji
 cross_val_scores = cross_val_score(ensemble_clf, X_train, y_train, cv=5)
 print("Wyniki kroswalidacji (5 podprób):", cross_val_scores)
 
 # Tworzenie ramki danych z wynikami
 results = pd.DataFrame({
-    'Metric': ['ACC (Dokładność)', 'Recall (Czułość)', 'F1'],
-    'Value': [accuracy, recall, f1]
+    'Metric': ['ACC (Dokładność)', 'Recall (Czułość)', 'F1', 'AUC'],
+    'Value': [accuracy, recall, f1, auc]
 })
 
 # Zapisanie wyników do pliku Excel (xlsx)
