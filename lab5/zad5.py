@@ -63,3 +63,7 @@ print('Tworzymy tabelę wyników-> DONE')
 
 # Wyświetlamy wyniki
 print(results)
+
+
+# Zapisanie wyników do pliku Excel (xlsx)
+results.to_excel('comparison.xlsx', index=False)

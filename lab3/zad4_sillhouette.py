@@ -16,7 +16,6 @@ data = data.iloc[:, 1:53].dropna()
 
 values = []
 
-
 min_clusters = 2
 max_clusters = 15
 # Pusty słownik do przechowywania wyników średnich miar silhouette

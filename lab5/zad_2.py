@@ -134,4 +134,4 @@ data = {
 df = pd.DataFrame(data)
 
 # Zapis do pliku CSV (CSV)
-df.to_excel('ensemble_learning.xls', index=False)
+df.to_excel('ensemble_learning.xlsx', index=False)
